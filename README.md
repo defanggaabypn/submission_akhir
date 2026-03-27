@@ -59,7 +59,7 @@ streamlit run app.py
 ```
 
 **Akses via Streamlit Community Cloud:**  
-[https://jaya-jaya-institut-dropout.streamlit.app](https://jaya-jaya-institut-dropout.streamlit.app) *(deploy ke Streamlit Cloud terlebih dahulu)*
+[https://nurk4wczjzgbrqzeu7re2m.streamlit.app](https://nurk4wczjzgbrqzeu7re2m.streamlit.app)
 
 Prototype ini memiliki dua tab:
 1. **Prediksi Individual** — form input data mahasiswa untuk mendapatkan prediksi status beserta probabilitas dropout/graduate

@@ -6,7 +6,6 @@ import os
 
 st.set_page_config(
     page_title="Prediksi Dropout Mahasiswa - Jaya Jaya Institut",
-    page_icon="🎓",
     layout="wide"
 )
 
@@ -15,13 +14,13 @@ st.markdown("""
     .main-header {
         font-size: 2.2rem;
         font-weight: 700;
-        color: #1a1a2e;
+        color: #1e293b;
         text-align: center;
         padding: 1rem 0;
     }
     .sub-header {
         font-size: 1.1rem;
-        color: #555;
+        color: #64748b;
         text-align: center;
         margin-bottom: 2rem;
     }
@@ -32,18 +31,18 @@ st.markdown("""
         margin: 1rem 0;
     }
     .dropout-box {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
     }
     .graduate-box {
-        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        background: linear-gradient(135deg, #22c55e, #16a34a);
         color: white;
     }
     .metric-card {
-        background: #f8f9fa;
+        background: #f1f5f9;
         padding: 1.2rem;
         border-radius: 10px;
-        border-left: 4px solid #3498db;
+        border-left: 4px solid #2563eb;
         margin: 0.5rem 0;
     }
     .stTabs [data-baseweb="tab-list"] {
