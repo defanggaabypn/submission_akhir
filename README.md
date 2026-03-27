@@ -30,24 +30,24 @@ pip install pandas numpy scikit-learn matplotlib seaborn joblib streamlit
 
 ## Business Dashboard
 
-Dashboard interaktif telah dibuat menggunakan HTML + Chart.js dan tersedia di folder `defanggaabypn-dashboard/index.html`. Dashboard memuat 8 visualisasi utama:
+Dashboard interaktif dibuat menggunakan HTML + Chart.js dan tersedia di folder `defanggaabypn-dashboard/`. Screenshot dashboard tersedia di `defanggaabypn-dashboard/defanggaabypn-dashboard.png`.
 
-- **Distribusi Status Mahasiswa** — donut chart proporsi Dropout, Graduate, Enrolled
-- **Dropout Rate per Program Studi** — identifikasi prodi paling berisiko
-- **Performa Akademik per Semester** — perbandingan nilai rata-rata antar status
-- **Mata Kuliah Lulus per Semester** — rata-rata MK yang disetujui
-- **Faktor Finansial** — pengaruh pembayaran biaya, beasiswa, dan tunggakan
+**Cara mengakses dashboard:**
+Buka file `defanggaabypn-dashboard/index.html` di browser (Google Chrome / Firefox).
+
+Dashboard memuat 8 visualisasi utama yang mencakup faktor-faktor penting monitoring mahasiswa:
+
+- **KPI Summary** — total Dropout (1.421 / 32.1%), Graduate (2.209), Enrolled (794)
+- **Dropout Rate per Program Studi** — identifikasi prodi paling berisiko (Biofuel 66.7%, Equinculture 55.3%, Informatika 54.1%)
+- **Distribusi Status Mahasiswa** — donut chart proporsi ketiga status
+- **Nilai Rata-rata per Semester** — perbandingan nilai Dropout vs Graduate vs Enrolled
+- **Mata Kuliah Lulus per Semester** — rata-rata MK disetujui (Dropout: 1.94, Graduate: 6.18)
+- **Faktor Finansial** — dropout rate: 86.6% jika biaya belum lunas, hanya 12.2% bagi penerima beasiswa
 - **Distribusi Gender** — pola dropout berdasarkan jenis kelamin
-- **Distribusi Usia** — perbandingan usia dropout vs graduate
-- **Status Perkawinan** — distribusi status mahasiswa per kategori
+- **Distribusi Usia & Status Perkawinan** — profil demografis mahasiswa
 
-Untuk mengakses dashboard, buka file `defanggaabypn-dashboard/index.html` di browser.
 
-> **Metabase (alternatif):** Jika menggunakan Metabase, jalankan dengan Docker dan ekspor database dengan:
-> ```bash
-> docker cp metabase:/metabase.db/metabase.db.mv.db ./
-> ```
-> Email: `root@mail.com` | Password: `root123`
+
 
 ## Menjalankan Sistem Machine Learning
 
