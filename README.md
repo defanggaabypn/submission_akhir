@@ -30,21 +30,25 @@ pip install pandas numpy scikit-learn matplotlib seaborn joblib streamlit
 
 ## Business Dashboard
 
-Dashboard interaktif dibuat menggunakan HTML + Chart.js dan tersedia di folder `defanggaabypn-dashboard/`. Screenshot dashboard tersedia di `defanggaabypn-dashboard/defanggaabypn-dashboard.png`.
+Dashboard monitoring mahasiswa telah dibuat menggunakan **Metabase** dengan koneksi database SQLite dari data mahasiswa.
 
 **Cara mengakses dashboard:**
-Buka file `defanggaabypn-dashboard/index.html` di browser (Google Chrome / Firefox).
+1. Jalankan Metabase container: `docker start metabase`
+2. Buka browser di `http://localhost:3000`
+3. Login dengan:
+   - Email: `root@mail.com`
+   - Password: `root123`
+4. Buka dashboard **"Analisis Mahasiswa Jaya Jaya Institut"**
 
-Dashboard memuat 8 visualisasi utama yang mencakup faktor-faktor penting monitoring mahasiswa:
+**File database Metabase:** `metabase.db.mv.db` sudah disertakan dalam berkas submission.
 
-- **KPI Summary** — total Dropout (1.421 / 32.1%), Graduate (2.209), Enrolled (794)
-- **Dropout Rate per Program Studi** — identifikasi prodi paling berisiko (Biofuel 66.7%, Equinculture 55.3%, Informatika 54.1%)
-- **Distribusi Status Mahasiswa** — donut chart proporsi ketiga status
-- **Nilai Rata-rata per Semester** — perbandingan nilai Dropout vs Graduate vs Enrolled
-- **Mata Kuliah Lulus per Semester** — rata-rata MK disetujui (Dropout: 1.94, Graduate: 6.18)
-- **Faktor Finansial** — dropout rate: 86.6% jika biaya belum lunas, hanya 12.2% bagi penerima beasiswa
-- **Distribusi Gender** — pola dropout berdasarkan jenis kelamin
-- **Distribusi Usia & Status Perkawinan** — profil demografis mahasiswa
+Dashboard memuat 5 visualisasi utama:
+
+- **Distribusi Status Mahasiswa** — donut chart proporsi Graduate (49.9%), Dropout (32.1%), Enrolled (17.9%)
+- **Dropout per Program Studi** — bar chart jumlah dropout berdasarkan program studi
+- **Rata-rata Nilai Semester 1 per Status** — perbandingan average grade antar status (Dropout: 6.9, Enrolled: 10.9, Graduate: 12.8)
+- **Biaya Kuliah vs Status** — stacked bar chart hubungan pembayaran biaya kuliah dengan status mahasiswa
+- **Distribusi Gender per Status** — bar chart distribusi gender berdasarkan status kelulusan
 
 
 
