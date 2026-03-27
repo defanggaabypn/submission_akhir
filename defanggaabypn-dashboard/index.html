@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Monitoring Mahasiswa - Jaya Jaya Institut</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222536;
+    --border: #2e3147;
+    --accent-red: #e74c3c;
+    --accent-green: #2ecc71;
+    --accent-blue: #3498db;
+    --accent-yellow: #f1c40f;
+    --text: #e8eaf0;
+    --text-muted: #8b92a9;
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1a1d27 0%, #1e2235 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header .logo {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #3498db, #8e44ad);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; font-weight: 700; color: white;
+  }
+
+  header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  header p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+
+  nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  nav a:hover { background: var(--surface2); color: var(--text); }
+
+  main {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .kpi-card .label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .kpi-card .value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .kpi-card .sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+  }
+
+  .kpi-card.red .value { color: var(--accent-red); }
+  .kpi-card.green .value { color: var(--accent-green); }
+  .kpi-card.blue .value { color: var(--accent-blue); }
+  .kpi-card.yellow .value { color: var(--accent-yellow); }
+
+  .chart-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .chart-grid-65-35 {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .card-sub {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+  }
+
+  .chart-container {
+    position: relative;
+  }
+
+  .bar-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .bar-item { display: flex; flex-direction: column; gap: 0.3rem; }
+
+  .bar-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+  }
+
+  .bar-label { color: var(--text-muted); }
+  .bar-val { color: var(--text); font-weight: 600; }
+
+  .bar-track {
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .comp-item {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .comp-item .c-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .comp-item .c-val {
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .comp-item .c-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+
+  .factor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 0.3rem;
+  }
+
+  .factor-box {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .factor-box .f-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .factor-box .f-yes { color: var(--accent-red); font-weight: 700; font-size: 1.2rem; }
+  .factor-box .f-no  { color: var(--accent-green); font-weight: 700; font-size: 1.2rem; }
+  .factor-box .f-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; }
+
+  .insight-box {
+    background: linear-gradient(135deg, rgba(52,152,219,0.12), rgba(142,68,173,0.12));
+    border: 1px solid rgba(52,152,219,0.25);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .insight-box h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #3498db;
+    margin-bottom: 1rem;
+  }
+
+  .insight-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .insight-item {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+  }
+
+  .insight-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #3498db;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  .insight-text { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .chart-grid-2, .chart-grid-3, .chart-grid-65-35 { grid-template-columns: 1fr; }
+    .insight-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">JJI</div>
+  <div>
+    <h1>Student Performance Dashboard</h1>
+    <p>Jaya Jaya Institut &mdash; Early Warning & Monitoring System</p>
+  </div>
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#academic">Akademik</a>
+    <a href="#financial">Finansial</a>
+    <a href="#demographic">Demografi</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- KPI Section -->
+  <div class="section-title" id="overview">Ringkasan Utama</div>
+  <div class="kpi-grid">
+    <div class="kpi-card red">
+      <div class="label">Total Dropout</div>
+      <div class="value">1,421</div>
+      <div class="sub">32.1% dari total mahasiswa</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="label">Total Graduate</div>
+      <div class="value">2,209</div>
+      <div class="sub">49.9% dari total mahasiswa</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="label">Total Enrolled</div>
+      <div class="value">794</div>
+      <div class="sub">17.9% dari total mahasiswa</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="label">Total Mahasiswa</div>
+      <div class="value">4,424</div>
+      <div class="sub">Dalam dataset observasi</div>
+    </div>
+  </div>
+
+  <!-- Status + Course -->
+  <div class="section-title">Distribusi Status & Program Studi</div>
+  <div class="chart-grid-65-35">
+    <div class="card">
+      <div class="card-title">Dropout Rate per Program Studi</div>
+      <div class="card-sub">Persentase mahasiswa yang dropout berdasarkan program studi</div>
+      <div class="chart-container"><canvas id="courseChart" height="300"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribusi Status Mahasiswa</div>
+      <div class="card-sub">Proporsi Dropout, Graduate, dan Enrolled</div>
+      <div class="chart-container" style="display:flex; justify-content:center;">
+        <canvas id="statusDonut" height="260" width="260"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Academic Performance -->
+  <div class="section-title" id="academic">Performa Akademik</div>
+  <div class="chart-grid-2">
+    <div class="card">
+      <div class="card-title">Nilai Rata-rata per Semester</div>
+      <div class="card-sub">Perbandingan nilai rata-rata antar status mahasiswa</div>
+      <div class="chart-container"><canvas id="gradeChart" height="240"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Mata Kuliah Lulus per Semester</div>
+      <div class="card-sub">Rata-rata mata kuliah yang berhasil disetujui</div>
+      <div class="chart-container"><canvas id="approvedChart" height="240"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-grid-2" style="margin-top:1.2rem;">
+    <div class="card">
+      <div class="card-title">Perbandingan Nilai Dropout vs Graduate</div>
+      <div class="card-sub">Rata-rata nilai kedua kelompok per semester</div>
+      <div class="comparison-grid">
+        <div class="comp-item">
+          <div class="c-label">Dropout - Sem 1</div>
+          <div class="c-val" style="color: var(--accent-red);">7.26</div>
+          <div class="c-sub">dari skala 0–20</div>
+        </div>
+        <div class="comp-item">
+          <div class="c-label">Graduate - Sem 1</div>
+          <div class="c-val" style="color: var(--accent-green);">12.64</div>
+          <div class="c-sub">dari skala 0–20</div>
+        </div>
+        <div class="comp-item">
+          <div class="c-label">Dropout - Sem 2</div>
+          <div class="c-val" style="color: var(--accent-red);">5.90</div>
+          <div class="c-sub">dari skala 0–20</div>
+        </div>
+        <div class="comp-item">
+          <div class="c-label">Graduate - Sem 2</div>
+          <div class="c-val" style="color: var(--accent-green);">12.70</div>
+          <div class="c-sub">dari skala 0–20</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribusi berdasarkan Program Studi (Top 6)</div>
+      <div class="card-sub">Jumlah mahasiswa Dropout dan Graduate per prodi</div>
+      <div class="chart-container"><canvas id="courseStackedChart" height="240"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Financial Factors -->
+  <div class="section-title" id="financial">Faktor Finansial</div>
+  <div class="chart-grid-2">
+    <div class="card">
+      <div class="card-title">Dropout Rate berdasarkan Faktor Finansial</div>
+      <div class="card-sub">Persentase dropout berdasarkan status pembayaran, beasiswa, dan tunggakan</div>
+
+      <div class="factor-grid">
+        <div class="factor-box">
+          <div class="f-label">Biaya Belum Lunas</div>
+          <div class="f-yes">86.6%</div>
+          <div class="f-sub">dropout rate</div>
+        </div>
+        <div class="factor-box">
+          <div class="f-label">Biaya Sudah Lunas</div>
+          <div class="f-no">24.7%</div>
+          <div class="f-sub">dropout rate</div>
+        </div>
+        <div class="factor-box">
+          <div class="f-label">Punya Tunggakan</div>
+          <div class="f-yes">62.0%</div>
+          <div class="f-sub">dropout rate</div>
+        </div>
+        <div class="factor-box">
+          <div class="f-label">Tanpa Tunggakan</div>
+          <div class="f-no">28.3%</div>
+          <div class="f-sub">dropout rate</div>
+        </div>
+        <div class="factor-box">
+          <div class="f-label">Penerima Beasiswa</div>
+          <div class="f-no">12.2%</div>
+          <div class="f-sub">dropout rate</div>
+        </div>
+        <div class="factor-box">
+          <div class="f-label">Tanpa Beasiswa</div>
+          <div class="f-yes">38.7%</div>
+          <div class="f-sub">dropout rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Dropout Rate - Faktor Finansial (Grafik)</div>
+      <div class="card-sub">Visualisasi perbandingan dropout rate per kondisi</div>
+      <div class="chart-container"><canvas id="financialChart" height="240"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Demographic -->
+  <div class="section-title" id="demographic">Profil Demografis</div>
+  <div class="chart-grid-3">
+    <div class="card">
+      <div class="card-title">Distribusi berdasarkan Gender</div>
+      <div class="card-sub">Status mahasiswa per jenis kelamin</div>
+      <div class="chart-container"><canvas id="genderChart" height="220"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribusi Usia saat Pendaftaran</div>
+      <div class="card-sub">Rata-rata usia Dropout vs Graduate</div>
+      <div style="margin-top:0.5rem;">
+        <div class="bar-list">
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span class="bar-label">Rata-rata Usia Dropout</span>
+              <span class="bar-val" style="color:var(--accent-red)">26.1 th</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:52%; background:var(--accent-red);"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span class="bar-label">Rata-rata Usia Graduate</span>
+              <span class="bar-val" style="color:var(--accent-green)">21.8 th</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:43%; background:var(--accent-green);"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span class="bar-label">Median Usia Dropout</span>
+              <span class="bar-val" style="color:var(--accent-red)">23 th</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:46%; background:var(--accent-red);"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span class="bar-label">Median Usia Graduate</span>
+              <span class="bar-val" style="color:var(--accent-green)">19 th</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:38%; background:var(--accent-green);"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span class="bar-label">Usia Maks Dropout</span>
+              <span class="bar-val">70 th</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:90%; background:var(--surface2); border:1px dashed #555;"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span class="bar-label">Usia Maks Graduate</span>
+              <span class="bar-val">62 th</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:75%; background:var(--surface2); border:1px dashed #555;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribusi Status Perkawinan</div>
+      <div class="card-sub">Jumlah Dropout dan Graduate per kategori</div>
+      <div class="chart-container"><canvas id="maritalChart" height="220"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Key Insights -->
+  <div class="insight-box">
+    <h3>Key Insights & Temuan Utama</h3>
+    <div class="insight-list">
+      <div class="insight-item">
+        <div class="insight-dot"></div>
+        <div class="insight-text"><strong style="color:var(--text)">Performa akademik adalah faktor terkuat.</strong> Mahasiswa dropout rata-rata hanya lulus 1.94 MK di semester 2, dibanding 6.18 MK untuk yang graduate (3x lebih tinggi).</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot"></div>
+        <div class="insight-text"><strong style="color:var(--text)">Biaya kuliah sangat berkorelasi dengan dropout.</strong> 86.6% mahasiswa yang belum melunasi biaya kuliah akhirnya dropout, vs hanya 24.7% bagi yang sudah lunas.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot"></div>
+        <div class="insight-text"><strong style="color:var(--text)">Beasiswa sangat efektif mencegah dropout.</strong> Penerima beasiswa hanya memiliki dropout rate 12.2%, dibanding 38.7% bagi non-penerima.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot"></div>
+        <div class="insight-text"><strong style="color:var(--text)">Prodi Biofuel paling berisiko.</strong> Dengan dropout rate 66.7%, program ini membutuhkan perhatian dan intervensi segera dari institusi.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot"></div>
+        <div class="insight-text"><strong style="color:var(--text)">Mahasiswa lebih tua lebih rentan dropout.</strong> Usia rata-rata dropout (26.1 th) jauh lebih tinggi dari graduate (21.8 th), kemungkinan karena beban ganda pekerjaan dan studi.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-dot"></div>
+        <div class="insight-text"><strong style="color:var(--text)">Semester pertama adalah periode kritis.</strong> Sinyal dropout sudah terlihat di semester 1. Deteksi dini pada semester awal sangat efektif untuk intervensi.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Jaya Jaya Institut &mdash; Student Performance Dashboard &bull; Data: 4,424 mahasiswa &bull; defanggaabypn
+</footer>
+
+<script>
+const COLORS = {
+  red: '#e74c3c',
+  green: '#2ecc71',
+  blue: '#3498db',
+  yellow: '#f1c40f',
+  purple: '#9b59b6',
+  orange: '#e67e22',
+  teal: '#1abc9c',
+  gray: '#8b92a9'
+};
+
+const defaults = {
+  color: '#e8eaf0',
+  font: { family: 'Inter', size: 11 }
+};
+Chart.defaults.color = defaults.color;
+Chart.defaults.font = defaults.font;
+
+// 1. Status Donut
+new Chart(document.getElementById('statusDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Graduate', 'Dropout', 'Enrolled'],
+    datasets: [{
+      data: [2209, 1421, 794],
+      backgroundColor: [COLORS.green, COLORS.red, COLORS.blue],
+      borderWidth: 2,
+      borderColor: '#1a1d27',
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    cutout: '65%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true } }
+    }
+  }
+});
+
+// 2. Course dropout bar chart
+const courseLabels = ['Biofuel Production Technologies','Equinculture','Informatics Engineering','Management (evening)','Basic Education','Agronomy','Oral Hygiene','Animation & Multimedia Design','Tourism','Advertising & Marketing','Management','Social Service (evening)','Journalism & Communication','Veterinary Nursing','Communication Design','Social Service','Nursing'];
+const courseValues = [66.7,55.3,54.1,50.7,44.3,41.0,38.4,38.1,38.1,35.4,35.3,33.0,30.5,26.7,22.6,18.3,15.4];
+const courseColors = courseValues.map(v => v >= 50 ? '#e74c3c' : v >= 35 ? '#e67e22' : '#f1c40f');
+
+new Chart(document.getElementById('courseChart'), {
+  type: 'bar',
+  data: {
+    labels: courseLabels,
+    datasets: [{
+      label: 'Dropout Rate (%)',
+      data: courseValues,
+      backgroundColor: courseColors,
+      borderRadius: 4,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } }
+    },
+    scales: {
+      x: {
+        grid: { color: '#2e3147' },
+        ticks: { callback: v => v + '%' },
+        max: 75
+      },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// 3. Grade per semester
+new Chart(document.getElementById('gradeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Semester 1', 'Semester 2'],
+    datasets: [
+      { label: 'Dropout', data: [7.26, 5.90], backgroundColor: COLORS.red, borderRadius: 4 },
+      { label: 'Enrolled', data: [11.13, 11.12], backgroundColor: COLORS.blue, borderRadius: 4 },
+      { label: 'Graduate', data: [12.64, 12.70], backgroundColor: COLORS.green, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } },
+    scales: {
+      y: {
+        grid: { color: '#2e3147' },
+        min: 0, max: 20,
+        title: { display: true, text: 'Rata-rata Nilai (0–20)' }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// 4. Approved units
+new Chart(document.getElementById('approvedChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Semester 1', 'Semester 2'],
+    datasets: [
+      { label: 'Dropout', data: [2.55, 1.94], backgroundColor: COLORS.red, borderRadius: 4 },
+      { label: 'Enrolled', data: [4.32, 4.06], backgroundColor: COLORS.blue, borderRadius: 4 },
+      { label: 'Graduate', data: [6.23, 6.18], backgroundColor: COLORS.green, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } },
+    scales: {
+      y: {
+        grid: { color: '#2e3147' },
+        title: { display: true, text: 'Rata-rata MK Lulus' }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// 5. Course stacked (top 6)
+new Chart(document.getElementById('courseStackedChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Nursing', 'Management', 'Social Service', 'Tourism', 'Agronomy', 'Informatics Eng'],
+    datasets: [
+      {
+        label: 'Graduate',
+        data: [580, 310, 218, 130, 103, 64],
+        backgroundColor: COLORS.green, borderRadius: 4
+      },
+      {
+        label: 'Dropout',
+        data: [107, 195, 65, 97, 73, 101],
+        backgroundColor: COLORS.red, borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } },
+    scales: {
+      y: { stacked: true, grid: { color: '#2e3147' } },
+      x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// 6. Financial chart
+new Chart(document.getElementById('financialChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Biaya Belum Lunas', 'Biaya Lunas', 'Ada Tunggakan', 'Tanpa Tunggakan', 'Punya Beasiswa', 'Tanpa Beasiswa'],
+    datasets: [{
+      label: 'Dropout Rate (%)',
+      data: [86.6, 24.7, 62.0, 28.3, 12.2, 38.7],
+      backgroundColor: [COLORS.red, COLORS.green, COLORS.red, COLORS.green, COLORS.green, COLORS.yellow],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } }
+    },
+    scales: {
+      y: {
+        grid: { color: '#2e3147' },
+        max: 100,
+        ticks: { callback: v => v + '%' }
+      },
+      x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+    }
+  }
+});
+
+// 7. Gender chart
+new Chart(document.getElementById('genderChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Perempuan', 'Laki-laki'],
+    datasets: [
+      { label: 'Dropout', data: [720, 701], backgroundColor: COLORS.red, borderRadius: 4 },
+      { label: 'Enrolled', data: [487, 307], backgroundColor: COLORS.blue, borderRadius: 4 },
+      { label: 'Graduate', data: [1661, 548], backgroundColor: COLORS.green, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } },
+    scales: {
+      y: { grid: { color: '#2e3147' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// 8. Marital status
+new Chart(document.getElementById('maritalChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Single', 'Married', 'Divorced', 'Facto Union', 'Widower', 'Leg. Separated'],
+    datasets: [
+      { label: 'Dropout', data: [1184, 179, 42, 11, 1, 4], backgroundColor: COLORS.red, borderRadius: 4 },
+      { label: 'Graduate', data: [2015, 148, 33, 11, 1, 1], backgroundColor: COLORS.green, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } },
+    scales: {
+      y: { grid: { color: '#2e3147' } },
+      x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
