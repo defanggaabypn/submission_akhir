@@ -24,8 +24,23 @@ Sumber data: [Students' Performance Dataset](https://github.com/dicodingacademy/
 Dataset berisi 4.424 baris dan 37 kolom (36 fitur + 1 target), dengan delimiter `;`.
 
 **Setup environment:**
+
+1. Buat dan aktifkan virtual environment:
 ```bash
-pip install pandas numpy scikit-learn matplotlib seaborn joblib streamlit
+python -m venv venv
+```
+- Windows:
+```bash
+venv\Scripts\activate
+```
+- macOS/Linux:
+```bash
+source venv/bin/activate
+```
+
+2. Install semua dependensi:
+```bash
+pip install -r requirements.txt
 ```
 
 ## Business Dashboard
